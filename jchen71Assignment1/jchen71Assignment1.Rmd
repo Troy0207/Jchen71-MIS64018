@@ -1,0 +1,25 @@
+---
+title: "IBM Monthly Stock Price"
+author: "jchen71"
+date: "2021/9/5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+data.pro<-read.csv("IBM.csv")
+data.pro<-data.pro[c(-61),]
+data.pro$Date<-as.Date(data.pro$Date)
+data.sum<-summary(data.pro$Adj.Close)
+data.sum
+
+```
+
+```{r, echo=FALSE}
+plot(data.pro$Date,data.pro$Adj.Close,type = "l",col="red",xlab = "Date",
+     ylab = "Stock price",main = "IBM Monthly Stock Price")
+grid(nx=12,ny=20,col="grey")
+```
