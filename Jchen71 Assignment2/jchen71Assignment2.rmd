@@ -1,0 +1,49 @@
+---
+title: "Assignment2"
+author: "jchen71"
+date: "2021/9/30"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r cars}
+library(lpSolveAPI)
+lpec1<-make.lp(0,9)
+set.objfn(lpec1,c(300,300,300,360,360,360,420,420,420))
+lp.control(lpec1,sense='max')
+```
+
+
+```{r }
+add.constraint(lpec1,c(1,1,1,0,0,0,0,0,0),"<=",750)
+add.constraint(lpec1,c(0,0,0,1,1,1,0,0,0),"<=",1200)
+add.constraint(lpec1,c(0,0,0,0,0,0,1,1,1),"<=",900)
+add.constraint(lpec1,c(1,0,0,1,0,0,1,0,0),"<=",750)
+add.constraint(lpec1,c(0,1,0,0,1,0,0,1,0),"<=",900)
+add.constraint(lpec1,c(0,0,1,0,0,1,0,0,1),"<=",450)
+add.constraint(lpec1,c(12,0,0,15,0,0,20,0,0),"<=",13000)
+add.constraint(lpec1,c(0,12,0,0,15,0,0,20,0),"<=",12000)
+add.constraint(lpec1,c(0,0,12,0,0,15,0,0,20),"<=",5000)
+Colnames<-c("X1s","X2s","X3s","X1m","X2m","X3m","X1L","X2L","X3L")
+Rownames<-c("c1","c2","c3","c4","c5","c6","c7","c8","c9")
+dimnames(lpec1)<-list(Rownames,Colnames)
+```
+
+
+```{r }
+write.lp(lpec1,filename = "Assignment2.lp",type = "lp")
+solve(lpec1)
+get.objective(lpec1)
+```
+The profit is 708000
+```{r }
+get.variables(lpec1)
+```
+The value is 0,500,250,400,400,133.3,350,0,0
+
+```{r }
+```
+
