@@ -1,0 +1,76 @@
+---
+title: "Assignment 4"
+author: "Jiahao Chen"
+date: "10/22/2021"
+output:
+  word_document: default
+  html_document: default
+---
+##1
+```{r }
+library(lpSolveAPI)
+lpec1<-make.lp(0,8)
+set.objfn(lpec1,c(22,14,30,16,20,24,600,625))
+
+
+```
+
+
+# add constraints
+```{r}
+add.constraint(lpec1,c(1,1,1,0,0,0,-1,0),"=",0)
+add.constraint(lpec1,c(0,0,0,1,1,1,0,-1),"=",0)
+add.constraint(lpec1,c(1,0,0,1,0,0,0,0),"=",80)
+add.constraint(lpec1,c(0,1,0,0,1,0,0,0),"=",60)
+add.constraint(lpec1,c(0,0,1,0,0,1,0,0),"=",70)
+add.constraint(lpec1,c(0,0,0,0,0,0,1,0),"<=",100)
+add.constraint(lpec1,c(0,0,0,0,0,0,0,1),"<=",120)
+Colnames<-c("X11","X12","X13","X21","X22","X23","X1","X2")
+Rownames<-c("c1","c2","c3","c4","c5","c6","c7")
+dimnames(lpec1)<-list(Rownames,Colnames)
+```
+
+#Solution
+```{r}
+write.lp(lpec1,filename = "PrimalAssignment4.lp",type = "lp")
+solve(lpec1)
+get.objective(lpec1)
+get.variables(lpec1)
+```
+Plant A will produce 100 units and Plant B will produce 110 units. Plant A will transport 40 units to Warehouse 1 and 60units to Warehouse 2. Plant B will transport 40 units to Warehouse 1 and 70 units to Warehouse 2. 
+
+
+##2
+```{r}
+lpec2<-make.lp(0,24)
+set.objfn(lpec2,c(1.52,1.60,1.40,1.70,1.63,1.55,1.45,1.57,1.30,5.15,5.69,6.13,5.64,5.80,5.12,5.47,6.05,6.12,5.71,5.32,6.16,6.25,6.17,5.87))
+
+```
+
+# add constraints
+```{r}
+add.constraint(lpec2,c(1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),"<=",93)
+add.constraint(lpec2,c(0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),"<=",88)
+add.constraint(lpec2,c(0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),"<=",95)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0,0),"=",30)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0,0),"=",57)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0,0),"=",48)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1,0),"=",91)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1),"=",48)
+add.constraint(lpec2,c(1,0,0,1,0,0,1,0,0,-1,-1,-1,-1,-1,0,0,0,0,0,0,0,0,0,0),"=",0)
+add.constraint(lpec2,c(0,1,0,0,1,0,0,1,0,0,0,0,0,0,-1,-1,-1,-1,-1,0,0,0,0,0),"=",0)
+add.constraint(lpec2,c(0,0,1,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,-1),"=",0)
+Colnames2<-c("X1A","X1B","X1C","X2A","X2B","X2C","X3A","X3B","X3C","XA1","XA2","XA3","XA4","XA5","XB1","XB2","XB3","XB4","XB5","XC1","XC2","XC3","XC4","XC5")
+Rownames2<-c("c1","c2","c3","c4","c5","c6","c7","C8","C9","C10","C11")
+dimnames(lpec2)<-list(Rownames2,Colnames2)
+```
+
+#Solution
+```{r}
+write.lp(lpec2,filename = "PrimalAssignment4(2).lp",type = "lp")
+solve(lpec2)
+get.objective(lpec2)
+get.variables(lpec2)
+```
+
+The min cost is 1964.73. The variables is X1A=93 X2B=86 X1C=28 X3C=67 XA1=30 XA4=91 XB2=57 XB3=29 XC3=19 XC5=48
