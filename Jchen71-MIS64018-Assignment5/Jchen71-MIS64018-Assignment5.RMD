@@ -1,0 +1,162 @@
+---
+title: "Assignment 5"
+author: "Jiahao Chen"
+date: "11/7/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+# DEA Analysis
+```{r}
+#install.packages("Benchmarking")
+library(lpSolveAPI)
+library(Benchmarking)
+```
+
+
+
+
+```{r}
+x<-matrix(c(150,400,320,520,350,320,0.2,0.7,1.2,2.0,1.2,0.7),ncol = 2)
+y<-matrix(c(14000,14000,42000,28000,19000,14000,3500,21000,10500,42000,25000,15000),ncol = 2)
+colnames(y)<-c("REMPD","PRIPD")
+colnames(x)<-c("SHPD","SUPD")
+```
+
+
+```{r}
+# FDH
+d1<-dea(x,y,RTS = 0)
+d1
+peers(d1)
+lambda(d1)
+dea.plot.frontier(x,y,RTS = 0)
+```
+
+
+
+The results indicate all DMUS are efficient in FDH assumption.
+
+```{r}
+#VRS
+d2<-dea(x,y,RTS = 1)
+d2
+peers(d2)
+lambda(d2)
+dea.plot.frontier(x,y,RTS = 1)
+```
+
+
+The results indicate that the DMU(6) is not efficent. The peers unit for DMU(6) are 1,2 and 5, with the relatives weight 0.40, 0.34 and 0.26.
+
+```{r}
+#DRS
+d3<-dea(x,y,RTS = 2)
+d3
+peers(d3)
+lambda(d3)
+dea.plot.frontier(x,y,RTS = 2)
+```
+
+
+
+
+The results indicate that the DMU(5) and DMU(6) are not efficent. The peers unit for DMU(5) are 1,2 and 4, with the relatives weight 0.20, 0.08 and 0.54. The peers unit for DMU(6) are 1,2 and 4, with the relatives weight 0.34, 0.39 and 0.13.
+```{r}
+#CRS
+d4<-dea(x,y,RTS = 3)
+d4
+peers(d4)
+lambda(d4)
+dea.plot.frontier(x,y,RTS = 3)
+```
+
+
+
+
+
+The results indicate that the DMU(5) and DMU(6) are not efficent. The peers unit for DMU(5) are 1,2 and 4, with the relatives weight 0.20, 0.08 and 0.54. The peers unit for DMU(6) are 1,2 and 4, with the relatives weight 0.34, 0.39 and 0.13.
+
+```{r}
+#IRS
+d5<-dea(x,y,RTS = 4)
+d5
+peers(d5)
+lambda(d5)
+dea.plot.frontier(x,y,RTS = 4)
+```
+
+
+
+
+
+The results indicate that the DMU(6) is not efficent. The peers unit for DMU(6) are 1,2 and 5, with the relatives weight 0.40, 0.34 and 0.26.
+
+```{r}
+#FRH
+d6<-dea(x,y,RTS = 6)
+d6
+peers(d6)
+lambda(d6)
+dea.plot.frontier(x,y,RTS = 6)
+
+```
+
+
+
+
+
+
+The results indicate all DMUS are efficient in FRH assumption.
+
+```{r}
+sum<-matrix(c("FDH",0,0,0,"VRS","DMU6","1,2,5","0.4,0.34 and 0.26","DRS","DMU5 DMU6","1,2,4","0.20, 0.08 and 0.54, 0.34, 0.39 and 0.13","CRS","DMU5 DMU6","1,2,4","0.20, 0.08 and 0.54, 0.34, 0.39 and 0.13","IRS","DMU6","1,2,5","0.4,0.34 and 0.26","FRH",0,0,0),nrow  = 4)
+colnames(sum)<-c("t1","t2","t3","t4","t5","t6")
+rownames(sum)<-c("DEA TYPE","Non-efficient","relative peers","relative weights")
+sum<-as.data.frame(sum)
+sum
+```
+
+
+
+
+
+
+Compared to these six methods, The all DMU in FDH and FRH are efficent. The DMU in IRS and VRS have the same peers and relative weights for unefficient DMUS. The DMU in DRS and CRS have  the same condition too. Im my opinion, I will choose FDH and FRH methods. They could be efficient and fexible.
+
+
+
+
+# Goal Programming
+
+##1
+
+
+```{r}
+lpec1<-make.lp(0,7)
+set.objfn(lpec1,c(20,15,25,-6,-6,0,-3))
+lp.control(lpec1,sense='max')
+add.constraint(lpec1,c(6,4,5,-1,1,0,0),"=",50)
+add.constraint(lpec1,c(8,7,5,0,0,-1,1),"=",75)
+```
+
+
+```{r}
+write.lp(lpec1,filename = "Assignment5.lp",type = "lp")
+```
+
+```{r}
+solve(lpec1)
+get.objective(lpec1)
+get.variables(lpec1)
+```
+
+
+
+
+
+
+The best way to reach the goal is that increase the number of employees. It might have the bad influence in the future.
+
