@@ -1,0 +1,176 @@
+---
+title: "Assignment 6"
+author: "Jiahao Chen"
+date: "11/19/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+## 1
+```{r}
+library(lpSolveAPI)
+lpec1<-make.lp(0,12)
+set.objfn(lpec1,c(5,3,2,3,4,4,1,6,2,7,4,5))
+lp.control(lpec1,sense='max')
+```
+
+```{r}
+add.constraint(lpec1,c(1,1,0,0,0,0,0,0,0,0,0,0),"=",1)
+add.constraint(lpec1,c(1,0,-1,0,-1,0,0,0,0,0,0,0),"=",0)
+add.constraint(lpec1,c(0,1,0,-1,0,0,0,0,0,0,0,0),"=",0)
+add.constraint(lpec1,c(0,0,0,0,1,-1,-1,0,0,0,0,0),"=",0)
+add.constraint(lpec1,c(0,0,1,1,0,0,0,-1,-1,0,0,0),"=",0)
+add.constraint(lpec1,c(0,0,0,0,0,0,1,0,0,0,0,-1),"=",0)
+add.constraint(lpec1,c(0,0,0,0,0,1,0,1,0,0,-1,0),"=",0)
+add.constraint(lpec1,c(0,0,0,0,0,0,0,0,1,-1,0,0),"=",0)
+add.constraint(lpec1,c(0,0,0,0,0,0,0,0,0,1,1,1),"=",1)
+Colnames<-c("X12","X13","X25","X35","X24","X47","X46","X57","X58","X89","X79","X69")
+Rownames<-c("U1","U2","U3","U4","U5","U6","U7","U8","U9")
+dimnames(lpec1)<-list(Rownames,Colnames)
+write.lp(lpec1,filename = "Assignment6.lp",type = "lp")
+solve(lpec1)
+get.objective(lpec1)
+```
+
+
+```{r}
+cbind(Colnames,get.variables(lpec1))
+```
+
+Running the LP formulation on any LP solver, the critical path is:
+
+From node 1 to 2
+
+From node 2 to 4
+
+From node 4 to 7
+
+From node 7 to 9
+
+The duration of project is 17 times.
+
+
+
+
+## 2 
+
+```{r}
+lpec2<-make.lp(0,8)
+set.objfn(lpec2,c(4,6.5,5.9,5.4,5.15,10,8.4,6.25))
+lp.control(lpec2,sense='max')
+```
+
+```{r}
+add.constraint(lpec2,c(40,50,80,0,0,0,0,0),"<=",1000)
+add.constraint(lpec2,c(0,0,0,60,45,60,0,0),"<=",1000)
+add.constraint(lpec2,c(0,0,0,0,0,0,30,25),"<=",1000)
+add.constraint(lpec2,c(40,0,0,0,0,0,0,0),">=",100)
+add.constraint(lpec2,c(0,50,0,0,0,0,0,0),">=",100)
+add.constraint(lpec2,c(0,0,80,0,0,0,0,0),">=",100)
+add.constraint(lpec2,c(0,0,0,60,0,0,0,0),">=",100)
+add.constraint(lpec2,c(0,0,0,0,45,0,0,0),">=",100)
+add.constraint(lpec2,c(0,0,0,0,0,60,0,0),">=",100)
+add.constraint(lpec2,c(0,0,0,0,0,0,30,0),">=",100)
+add.constraint(lpec2,c(0,0,0,0,0,0,0,25),">=",100)
+add.constraint(lpec2,c(40,50,80,60,40,60,30,25),"<=",2500)
+set.type(lpec2,1:8,"integer")
+Colnames<-c("S1","S2","S3","H1","H2","H3","C1","C2")
+Rownames<-c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12")
+dimnames(lpec2)<-list(Rownames,Colnames)
+```
+
+
+```{r}
+write.lp(lpec2,filename = "Assignment6(2).lp",type = "lp")
+```
+
+
+
+
+
+```{r}
+solve(lpec2)
+get.objective(lpec2)
+get.variables(lpec2)
+```
+```{r}
+cbind(Colnames,get.variables(lpec2))
+```
+The ammout of stock shares(in thousand):
+
+ "S1"     3 
+ "S2"     5
+ "S3"     2 
+ "H1"     2 
+ "H2"     3
+ "H3"     12
+ "C1"     30
+ "C2"     4
+ 
+The max return is $479,550.
+
+The amount of dolloar invested in each stock(in thousand):
+
+ "S1"     120
+ "S2"     250
+ "S3"     160 
+ "H1"     120 
+ "H2"     135
+ "H3"     720
+ "C1"     900
+ "C2"     100
+ 
+ 
+ 
+ 
+```{r}
+#  no integer restriction
+lpec3<-make.lp(0,8)
+set.objfn(lpec3,c(4,6.5,5.9,5.4,5.15,10,8.4,6.25))
+lp.control(lpec3,sense='max')
+add.constraint(lpec3,c(40,50,80,0,0,0,0,0),"<=",1000000)
+add.constraint(lpec3,c(0,0,0,60,45,60,0,0),"<=",1000000)
+add.constraint(lpec3,c(0,0,0,0,0,0,30,25),"<=",1000000)
+add.constraint(lpec3,c(40,0,0,0,0,0,0,0),">=",100000)
+add.constraint(lpec3,c(0,50,0,0,0,0,0,0),">=",100000)
+add.constraint(lpec3,c(0,0,80,0,0,0,0,0),">=",100000)
+add.constraint(lpec3,c(0,0,0,60,0,0,0,0),">=",100000)
+add.constraint(lpec3,c(0,0,0,0,45,0,0,0),">=",100000)
+add.constraint(lpec3,c(0,0,0,0,0,60,0,0),">=",100000)
+add.constraint(lpec3,c(0,0,0,0,0,0,30,0),">=",100000)
+add.constraint(lpec3,c(0,0,0,0,0,0,0,25),">=",100000)
+add.constraint(lpec3,c(40,50,80,60,40,60,30,25),"<=",2500000)
+set.type(lpec3,1:8,"integer")
+Colnames<-c("S1","S2","S3","H1","H2","H3","C1","C2")
+Rownames<-c("U1","U2","U3","U4","U5","U6","U7","U8","U9","U10","U11","U12")
+dimnames(lpec3)<-list(Rownames,Colnames)
+```
+ 
+```{r}
+solve(lpec3)
+get.objective(lpec3)
+get.variables(lpec3)
+```
+ 
+```{r}
+(log(get.objective(lpec3))-log(get.objective(lpec2)*1000))*100
+```
+The integer restricts nearly 1.87% about the value of return.
+
+
+```{r}
+abc<-cbind.data.frame(Colnames,get.variables(lpec2)*1000,get.variables(lpec3))
+abc$pre<-round((log(abc$`get.variables(lpec3)`)-log(abc$`get.variables(lpec2) * 1000`))*100,2)
+cbind(abc$Colnames,abc$pre)
+```
+The percentage of investment quantities change is(%):
+ "S1" "-18.19"
+ "S2" "21.87" 
+ "S3" "-47"   
+ "H1" "-18.21"
+ "H2" "-29.98"
+ "H3" "10.53" 
+ "C1" "0"     
+ "C2" "0"     
